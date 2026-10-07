@@ -3,39 +3,54 @@ import {
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
   IonList, IonItem, IonInput, IonButton 
 } from '@ionic/react';
+import { Preferences } from '@capacitor/preferences';
 import TaskItem, { Task } from '../components/TaskItem';
 
 const Home: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false); // Sécurité anti-écrasement
 
-  // Exécuté une seule fois au lancement de l'application
+  // Changement
   useEffect(() => {
-    const savedTasks = localStorage.getItem('my-todolist');
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
+    const loadSavedTasks = async () => {
+      const { value } = await Preferences.get({ key: 'my-native-todolist' });
+      if (value) {
+        setTasks(JSON.parse(value));
+      }
+      setIsLoaded(true); // Indique que le chargement initial est terminé
+    };
+    loadSavedTasks();
   }, []);
 
-  // Chaque fois que le tableau tasks est modifié
+  // Sauvegarde
   useEffect(() => {
-    localStorage.setItem('my-todolist', JSON.stringify(tasks));
-  }, [tasks]);
+    const saveTasks = async () => {
+      // On sauvegarde uniquement si les données initiales ont bien été chargées
+      if (isLoaded) { 
+        await Preferences.set({
+          key: 'my-native-todolist',
+          value: JSON.stringify(tasks),
+        });
+      }
+    };
+    saveTasks();
+  }, [tasks, isLoaded]);
 
-  // Ajouter une tâche
+  // Ajout d'une tâche
   const addTask = () => {
     if (newTaskText.trim() !== '') {
       const newTask: Task = {
-        id: Date.now().toString(), // Génère un ID unique
+        id: Date.now().toString(),
         text: newTaskText,
         done: false
       };
       setTasks([...tasks, newTask]);
-      setNewTaskText(''); // Vide le champ après ajout
+      setNewTaskText('');
     }
   };
 
-  // Cocher/Décocher une tâche
+  // Modifier une tâche
   const toggleTask = (id: string) => {
     setTasks(tasks.map(task => 
       task.id === id ? { ...task, done: !task.done } : task
@@ -62,7 +77,6 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        {/* Zone de création de tâche */}
         <IonItem>
           <IonInput 
             placeholder="Ajouter une tâche..." 
@@ -73,7 +87,6 @@ const Home: React.FC = () => {
           <IonButton slot="end" onClick={addTask}>Ajouter</IonButton>
         </IonItem>
 
-        {/* Liste des composants TaskItem */}
         <IonList>
           {tasks.map(task => (
             <TaskItem 
