@@ -29,7 +29,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
         {task.text}
       </IonLabel>
       
-      <IonButton slot="end" fill="clear" color="medium" onClick={() => onDelete(task.id)}>
+      <IonButton 
+        slot="end" 
+        fill="clear" 
+        color="medium" 
+        onClick={() => onDelete(task.id)}
+        className="task-delete-btn"
+      >
         <IonIcon icon={trashOutline} slot="icon-only" />
       </IonButton>
     </IonItem>
