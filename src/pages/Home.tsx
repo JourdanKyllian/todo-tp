@@ -1,93 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
-  IonList, IonItem, IonInput, IonButton 
+  IonList, IonButtons, IonButton, IonIcon 
 } from '@ionic/react';
-import { Preferences } from '@capacitor/preferences';
-import TaskItem, { Task } from '../components/TaskItem';
+import { addOutline, searchOutline } from 'ionicons/icons';
+import TaskItem from '../components/TaskItem';
+import AddTaskSheet from '../components/AddTaskSheet';
+import { useTasks } from '../hooks/useTasks';
+import './Home.css';
 
 const Home: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTaskText, setNewTaskText] = useState('');
-  const [isLoaded, setIsLoaded] = useState(false); // Sécurité anti-écrasement
+  // Branchement du hook métier
+  const { tasks, addTask, toggleTask, deleteTask } = useTasks();
+  // État local uniquement pour l'interface
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Changement
-  useEffect(() => {
-    const loadSavedTasks = async () => {
-      const { value } = await Preferences.get({ key: 'my-native-todolist' });
-      if (value) {
-        setTasks(JSON.parse(value));
-      }
-      setIsLoaded(true); // Indique que le chargement initial est terminé
-    };
-    loadSavedTasks();
-  }, []);
-
-  // Sauvegarde
-  useEffect(() => {
-    const saveTasks = async () => {
-      // On sauvegarde uniquement si les données initiales ont bien été chargées
-      if (isLoaded) { 
-        await Preferences.set({
-          key: 'my-native-todolist',
-          value: JSON.stringify(tasks),
-        });
-      }
-    };
-    saveTasks();
-  }, [tasks, isLoaded]);
-
-  // Ajout d'une tâche
-  const addTask = () => {
-    if (newTaskText.trim() !== '') {
-      const newTask: Task = {
-        id: Date.now().toString(),
-        text: newTaskText,
-        done: false
-      };
-      setTasks([...tasks, newTask]);
-      setNewTaskText('');
-    }
-  };
-
-  // Modifier une tâche
-  const toggleTask = (id: string) => {
-    setTasks(tasks.map(task => 
-      task.id === id ? { ...task, done: !task.done } : task
-    ));
-  };
-
-  // Supprimer une tâche
-  const deleteTask = (id: string) => {
-    setTasks(tasks.filter(task => task.id !== id));
+  const handleAddTask = (text: string) => {
+    addTask(text);
+    setIsModalOpen(false); // Action consécutive gérée par le composant parent
   };
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonTitle>Todolist TP1</IonTitle>
+          <IonTitle>ToDo</IonTitle>
+          <IonButtons slot="end">
+            <IonButton>
+              <IonIcon slot="icon-only" icon={searchOutline} />
+            </IonButton>
+            <IonButton onClick={() => setIsModalOpen(true)}>
+              <IonIcon slot="icon-only" icon={addOutline} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Todolist</IonTitle>
+            <IonTitle size="large">ToDo</IonTitle>
           </IonToolbar>
         </IonHeader>
 
-        <IonItem>
-          <IonInput 
-            placeholder="Ajouter une tâche..." 
-            value={newTaskText}
-            onIonInput={(e: any) => setNewTaskText(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addTask()}
-          />
-          <IonButton slot="end" onClick={addTask}>Ajouter</IonButton>
-        </IonItem>
-
-        <IonList>
+        <IonList className="task-list">
           {tasks.map(task => (
             <TaskItem 
               key={task.id} 
@@ -98,6 +54,11 @@ const Home: React.FC = () => {
           ))}
         </IonList>
 
+        <AddTaskSheet 
+          isOpen={isModalOpen} 
+          onDidDismiss={() => setIsModalOpen(false)} 
+          onAddTask={handleAddTask} 
+        />
       </IonContent>
     </IonPage>
   );

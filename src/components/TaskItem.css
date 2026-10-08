@@ -1,10 +1,4 @@
-/* Désactive le fond par défaut de la liste */
-.task-list {
-  background: transparent;
-  padding-top: 20px;
-}
-
-/* Style de la carte tâche (façon pillule/carte arrondie) */
+/* Carte de la tâche avec bords arrondis et ombre légère */
 .task-card {
   --background: var(--ion-color-step-50, #1C1C1E);
   --border-radius: 12px;
@@ -14,31 +8,21 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Case à cocher en cercle */
+/* Case à cocher rendue parfaitement circulaire */
 .task-checkbox::part(container) {
   border-radius: 50%;
   border: 1px solid var(--ion-color-step-300, #4a4a4a);
 }
 
-/* Textes barrés et grisés si terminés */
+/* Animation douce du texte lors du cochage */
 .task-text {
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
+/* État barré et grisé quand la tâche est terminée */
 .task-text-done {
   text-decoration: line-through;
   color: var(--ion-color-medium);
   transition: all 0.2s ease;
-}
-
-/* Modale */
-.modal-input-item {
-  --background: var(--ion-color-step-50, #f4f5f8);
-  --border-radius: 12px;
-  margin-bottom: 16px;
-}
-
-.modal-add-button {
-  margin-top: 10px;
 }
