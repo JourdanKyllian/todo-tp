@@ -1,0 +1,45 @@
+/* Gère la fluidité de la marge quand la modale s'ouvre/se ferme */
+.task-list {
+  background: transparent;
+  padding-top: 20px;
+  transition: padding-bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- STYLES DE LA MODALE --- */
+
+/* Ombre portée vers le haut pour détacher le tiroir */
+.bottom-sheet-modal {
+  --box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Mode Clair par défaut */
+.modal-content {
+  --background: #f7f7f8; /* Gris très léger pour la modale */
+}
+
+.modal-input-item {
+  --background: #ffffff; /* Blanc pur pour l'input */
+  --border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--ion-color-step-100, #e2e2e2);
+}
+
+.modal-add-button {
+  margin-top: 10px;
+}
+
+/* Mode Sombre */
+@media (prefers-color-scheme: dark) {
+  .bottom-sheet-modal {
+    --box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+  }
+  
+  .modal-content {
+    --background: #1C1C1E; /* Gris carte élevé Apple */
+  }
+
+  .modal-input-item {
+    --background: #000000; /* Noir profond pour creuser l'input */
+    border: 1px solid #2C2C2E;
+  }
+}

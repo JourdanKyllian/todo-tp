@@ -1,15 +1,14 @@
 import React from 'react';
 import { IonItem, IonCheckbox, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import { trashOutline } from 'ionicons/icons';
+import './TaskItem.css';
 
-// Définit la structure d'une tâche
 export interface Task {
   id: string;
   text: string;
   done: boolean;
 }
 
-// Définit les actions que le parent pourra envoyer au composant
 interface TaskItemProps {
   task: Task;
   onToggle: (id: string) => void;
@@ -18,23 +17,25 @@ interface TaskItemProps {
 
 const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
   return (
-    <IonItem>
-      {/* Case à cocher à gauche */}
+    <IonItem lines="none" className="task-card">
       <IonCheckbox 
         slot="start" 
         checked={task.done} 
-        onIonChange={() => onToggle(task.id)} 
+        onIonChange={() => onToggle(task.id)}
+        className="task-checkbox"
       />
       
-      {/* Texte au milieu */}
-      <IonLabel 
-        style={{ textDecoration: task.done ? 'line-through' : 'none' }}
-      >
+      <IonLabel className={task.done ? 'task-text-done' : 'task-text'}>
         {task.text}
       </IonLabel>
       
-      {/* Bouton poubelle à droite */}
-      <IonButton slot="end" fill="clear" color="danger" onClick={() => onDelete(task.id)}>
+      <IonButton 
+        slot="end" 
+        fill="clear" 
+        color="medium" 
+        onClick={() => onDelete(task.id)}
+        className="task-delete-btn"
+      >
         <IonIcon icon={trashOutline} slot="icon-only" />
       </IonButton>
     </IonItem>
