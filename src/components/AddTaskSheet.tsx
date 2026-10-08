@@ -14,7 +14,11 @@ const AddTaskSheet: React.FC<AddTaskSheetProps> = ({ isOpen, onDidDismiss, onAdd
   const handleAdd = () => {
     if (text.trim() !== '') {
       onAddTask(text);
-      setText(''); // Nettoie le champ pour la prochaine ouverture
+      setText('');
+      
+      setTimeout(() => {
+        inputRef.current?.setFocus();
+      }, 50);
     }
   };
 
@@ -22,11 +26,20 @@ const AddTaskSheet: React.FC<AddTaskSheetProps> = ({ isOpen, onDidDismiss, onAdd
     <IonModal 
       isOpen={isOpen} 
       onDidDismiss={onDidDismiss}
-      initialBreakpoint={0.25}
-      breakpoints={[0, 0.25, 0.5]}
+      initialBreakpoint={0.30}
+      breakpoints={[0, 0.30, 0.5]}
+      backdropBreakpoint={1}
       onIonModalDidPresent={() => inputRef.current?.setFocus()}
+      className="bottom-sheet-modal" /* Ajout de la classe ici */
     >
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding modal-content" /* Et ici */>
+        
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '4px' }}>
+          <IonButton fill="clear" color="medium" size="small" onClick={onDidDismiss}>
+            Fermer
+          </IonButton>
+        </div>
+
         <IonItem lines="none" className="modal-input-item">
           <IonInput 
             ref={inputRef}
@@ -37,9 +50,11 @@ const AddTaskSheet: React.FC<AddTaskSheetProps> = ({ isOpen, onDidDismiss, onAdd
             clearInput
           />
         </IonItem>
+        
         <IonButton expand="block" shape="round" className="modal-add-button" onClick={handleAdd}>
-          Créer la tâche
+          Ajouter
         </IonButton>
+
       </IonContent>
     </IonModal>
   );

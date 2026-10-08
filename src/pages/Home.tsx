@@ -10,14 +10,15 @@ import { useTasks } from '../hooks/useTasks';
 import './Home.css';
 
 const Home: React.FC = () => {
-  // Branchement du hook métier
   const { tasks, addTask, toggleTask, deleteTask } = useTasks();
-  // État local uniquement pour l'interface
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddTask = (text: string) => {
     addTask(text);
-    setIsModalOpen(false); // Action consécutive gérée par le composant parent
+  };
+
+  const handleBackgroundClick = () => {
+    if (isModalOpen) setIsModalOpen(false);
   };
 
   return (
@@ -36,14 +37,18 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
+      <IonContent fullscreen onClick={handleBackgroundClick}>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">ToDo</IonTitle>
           </IonToolbar>
         </IonHeader>
 
-        <IonList className="task-list">
+        {/* Le paddingBottom dynamique permet de scroller au-dessus de la modale */}
+        <IonList 
+          className="task-list" 
+          style={{ paddingBottom: isModalOpen ? '35vh' : '32px' }}
+        >
           {tasks.map(task => (
             <TaskItem 
               key={task.id} 
@@ -54,12 +59,13 @@ const Home: React.FC = () => {
           ))}
         </IonList>
 
-        <AddTaskSheet 
-          isOpen={isModalOpen} 
-          onDidDismiss={() => setIsModalOpen(false)} 
-          onAddTask={handleAddTask} 
-        />
       </IonContent>
+      
+      <AddTaskSheet 
+        isOpen={isModalOpen} 
+        onDidDismiss={() => setIsModalOpen(false)} 
+        onAddTask={handleAddTask} 
+      />
     </IonPage>
   );
 };
