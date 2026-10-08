@@ -5,11 +5,28 @@
   transition: padding-bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.task-searchbar {
+  padding: 4px 12px 8px;
+  --background: var(--ion-color-light, #f4f5f8);
+  --border-radius: 12px;
+  --box-shadow: none;
+}
+
+.task-filter {
+  margin: 4px 16px 8px;
+}
+
 .remaining-count {
   margin: 8px 20px 4px;
   font-size: 14px;
   font-weight: 500;
   color: var(--ion-color-medium);
+}
+
+@media (prefers-color-scheme: dark) {
+  .task-searchbar {
+    --background: #1C1C1E;
+  }
 }
 
 .empty-state {
