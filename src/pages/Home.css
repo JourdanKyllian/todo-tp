@@ -1,8 +1,46 @@
 /* Gère la fluidité de la marge quand la modale s'ouvre/se ferme */
 .task-list {
   background: transparent;
-  padding-top: 20px;
+  padding-top: 8px;
   transition: padding-bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.remaining-count {
+  margin: 8px 20px 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ion-color-medium);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 32px 32px;
+  min-height: 50vh;
+}
+
+.empty-state-icon {
+  font-size: 56px;
+  color: var(--ion-color-medium);
+  margin-bottom: 16px;
+}
+
+.empty-state-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.empty-state-text {
+  margin: 0 0 24px;
+  max-width: 280px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ion-color-medium);
 }
 
 /* --- STYLES DE LA MODALE --- */
